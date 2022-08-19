@@ -60,7 +60,7 @@ class Venue(db.Model):
 
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
 Show = db.Table('show',
-  db.Column('id', db.Integer, primary_key=True, nullable=False),
+  #db.Column('id', db.Integer, primary_key=True, nullable=False, autoincrement=True),
   db.Column('start_time', db.DateTime, default=datetime.utcnow, nullable=False),
   db.Column('artist_id', db.Integer, db.ForeignKey('artist.id'), primary_key=True),
   db.Column('venue_id', db.Integer, db.ForeignKey('venue.id'), primary_key=True)
@@ -114,7 +114,7 @@ def index():
 
 @app.route('/venues')
 def venues():
-  venues = Venue.query.all()
+  venues = Venue.query.all() 
   # TODO: replace with real venues data.
   #       num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
   return render_template('pages/venues.html', areas=venues);
