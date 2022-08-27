@@ -371,12 +371,20 @@ def shows():
   # displays list of shows at /shows
   # TODO: replace with real venues data.
   shows = db.session.query(Show).all()
-  artist = Artist.query.all()
-  venue = Venue.query.all()
-  
+  artist = db.session.query(Artist).all()
 
-  print(shows)
-  print(artist)
+  """  artist_id = shows.artist_id
+  venue_id = shows.venue_id
+  artist = Artist.query.filter(id=artist_id).first()
+  venue = Venue.query.filter(id=venue_id).first()
+  artist_name = artist.name 
+  show_name = show.name"""
+
+  artist = Artist.query.filter(Artist.show)
+  venue = Venue.query.filter(Venue.Artist)
+
+
+
   print(venue)
   """  data=[ {
     "venue_id": 3,
@@ -386,7 +394,7 @@ def shows():
     "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
     "start_time": "2035-04-08T20:00:00.000Z"
   }]"""
-  return render_template('pages/shows.html', shows=shows, artist=artist, venue=venue)
+  return render_template('pages/shows.html', artists=artist, venue=venue)
 
 @app.route('/shows/create')
 def create_shows():
@@ -403,11 +411,6 @@ def create_show_submission():
     start_time = request.form['start_time']
     artist_id = request.form['artist_id']
     venue_id = request.form['venue_id']
-    """    show = Show(
-      start_time = start_time,
-      artist_id  = artist_id,
-      venue_id   = venue_id
-      )"""
     artist = Artist.query.filter_by(id=artist_id).first()
     venue = Venue.query.filter_by(id=venue_id).first()
     artist.show.start_time = start_time
