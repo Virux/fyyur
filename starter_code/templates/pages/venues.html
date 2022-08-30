@@ -5,6 +5,7 @@
 <h3>{{ area.city }}, {{ area.state }}</h3>
 	<ul class="items">
 		{% for venue in areas %}
+		{% if venue.city == area.city %}
 		<li>
 			<a href="/venues/{{ venue.id }}">
 				<i class="fas fa-music"></i>
@@ -13,6 +14,7 @@
 				</div>
 			</a>
 		</li>
+		{% endif %}
 		{% endfor %}
 	</ul>
 {% endfor %}
