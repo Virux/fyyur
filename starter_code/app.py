@@ -416,6 +416,7 @@ def shows():
 
   artist = Artist.query.filter(Artist.show)
   venue = Venue.query.filter(Venue.Artist)
+  print(artist)
 
   return render_template('pages/shows.html', artists=artist, venue=venue)
 
