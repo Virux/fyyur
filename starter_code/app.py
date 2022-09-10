@@ -98,6 +98,10 @@ class Show(db.Model):
     venue_id = db.Column(db.Integer, db.ForeignKey('venue.id'), nullable=False)
     artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'), nullable=False)
 
+    def __repr__(self):
+      return f'Show time: {self.start_time}, Artist ID: {self.artist_id}, Venue ID: {self.venue_id}'
+
+
 #----------------------------------------------------------------------------#
 # Filters.
 #----------------------------------------------------------------------------#
@@ -166,6 +170,7 @@ def create_venue_form():
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
   error = False
+
   try:
     name = request.form['name']
     city = request.form['city']
@@ -414,24 +419,11 @@ def create_artist_submission():
 
 @app.route('/shows')
 def shows():
-  # displays list of shows at /shows
-  # TODO: replace with real venues data.
-  #shows = db.session.query(Show).all()
-  #artist = db.session.query(Artist).all()
+  shows = Show.query.join(Artist).join(Venue).\
+  filter((Show.artist_id == Artist.id) & (Show.venue_id == Venue.id)).all()
 
-  """  artist_id = shows.artist_id
-  venue_id = shows.venue_id
-  artist = Artist.query.filter(id=artist_id).first()
-  venue = Venue.query.filter(id=venue_id).first()
-  artist_name = artist.name 
-  show_name = show.name"""
-
-  artist = Artist.query.filter(Artist.shows)
-  venue = Venue.query.filter(Venue.shows)
-  #print(artist)
-
-  return render_template('pages/shows.html', artists=artist, venue=venue)
-
+  return render_template('pages/shows.html', shows=shows)
+  
 @app.route('/shows/create')
 def create_shows():
   # renders form. do not touch.
@@ -441,32 +433,28 @@ def create_shows():
 @app.route('/shows/create', methods=['POST'])
 def create_show_submission():
   error = False
-  # called to create new shows in the db, upon submitting new show listing form
-  # TODO: insert form data as a new Show record in the db, instead
-  try:
-    start_time = request.form['start_time']
-    artist_id = request.form['artist_id']
-    venue_id = request.form['venue_id']
-    artist = Artist.query.filter_by(id=artist_id).first()
-    venue = Venue.query.filter_by(id=venue_id).first()
-    artist.show.start_time = start_time
-    artist.show.append(venue)
-    db.session.add(artist)
-    db.session.commit()
-  except:
-    error = True
-    print(sys.exc_info())
-    db.session.rollback()
-  finally:
-    db.session.close()
-  if error:
-    flash('An error occurred. Show could not be listed.')
-  else:
-    # on successful db insert, flash success
-    flash('Show was successfully listed!')
-  # TODO: on unsuccessful db insert, flash an error instead.
-  # e.g., flash('An error occurred. Show could not be listed.')
-  # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
+  form = ShowForm()
+  if form.validate():
+    try:
+        start_time = request.form['start_time']
+        show = Show(start_time=start_time)
+        show.artist_id = request.form['artist_id']
+        show.venue_id = request.form['venue_id']
+        print(show.artist_id, show.venue_id)
+        print(show.start_time)
+
+
+        db.session.add(show)
+        db.session.commit()
+        flash('Show was successfully listed!')
+    except:
+      error = True
+      print(sys.exc_info())
+      db.session.rollback()
+    finally:
+      db.session.close()
+    if error:
+      flash('An error occurred. Show could not be listed.')
   return render_template('pages/home.html')
 
 @app.errorhandler(404)
