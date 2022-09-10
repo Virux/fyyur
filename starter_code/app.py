@@ -35,14 +35,6 @@ migrate = Migrate(app, db)
 # Models.
 #----------------------------------------------------------------------------#
 
-# TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
-"""Show = db.Table('show',
-  db.Column('id', db.Integer, primary_key=True, nullable=False, autoincrement=True),
-  db.Column('artist_id', db.Integer, db.ForeignKey('artist.id'), primary_key=True),
-  db.Column('venue_id', db.Integer, db.ForeignKey('venue.id'), primary_key=True),
-  db.Column('start_time', db.DateTime, nullable=False)
-  )"""
-
 
 class Venue(db.Model):
     __tablename__ = 'venue'
@@ -107,12 +99,12 @@ class Show(db.Model):
 #----------------------------------------------------------------------------#
 
 def format_datetime(value, format='medium'):
-  date = dateutil.parser.parse(value)
+  #date = dateutil.parser.parse(value)
   if format == 'full':
       format="EEEE MMMM, d, y 'at' h:mma"
   elif format == 'medium':
       format="EE MM, dd, y h:mma"
-  return babel.dates.format_datetime(date, format, locale='en')
+  return babel.dates.format_datetime(value, format, locale='en')
 
 app.jinja_env.filters['datetime'] = format_datetime
 
@@ -423,7 +415,7 @@ def shows():
   filter((Show.artist_id == Artist.id) & (Show.venue_id == Venue.id)).all()
 
   return render_template('pages/shows.html', shows=shows)
-  
+
 @app.route('/shows/create')
 def create_shows():
   # renders form. do not touch.
