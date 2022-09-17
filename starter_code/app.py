@@ -323,7 +323,7 @@ def edit_venue_submission(venue_id):
     venue.state = request.form['state']
     venue.address = request.form['address']
     venue.phone = request.form['phone']
-    venue.genres = request.form['genres']
+    venue.genres = request.form.getlist('genres')
     venue.image_link = request.form['image_link']
     venue.facebook_link = request.form['facebook_link']
     venue.website_link = request.form['website_link']
