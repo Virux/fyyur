@@ -279,14 +279,15 @@ def edit_artist_submission(artist_id):
     artist.city = request.form['city']
     artist.state = request.form['state']
     artist.phone = request.form['phone']
-    artist.genres = request.form['genres']
+    artist.genres = request.form.getlist('genres')
     artist.image_link = request.form['image_link']
     artist.facebook_link = request.form['facebook_link']
     artist.website_link = request.form['website_link']
-    if artist.seeking_venue == "y":
-      artist.seeking_venue = True
-    else:
+    artist.seeking_venue = request.form.get('seeking_venue', '')
+    if artist.seeking_venue == '':
       artist.seeking_venue = False
+    else:
+      artist.seeking_venue = True
     artist.seeking_description = request.form['seeking_description']
     db.session.add(artist)
     db.session.commit()
@@ -361,15 +362,15 @@ def create_artist_submission():
     city = request.form['city']
     state = request.form['state']
     phone = request.form['phone']
-    genres = request.form['genres']
+    genres = request.form.getlist('genres')
     image_link = request.form['image_link']
     facebook_link = request.form['facebook_link']
     website_link = request.form['website_link']
-    seeking_venue = request.form['seeking_venue']
-    if seeking_venue == "y":
-      seeking_venue = True
-    else:
+    seeking_venue = request.form.get('seeking_venue', '')
+    if seeking_venue == '':
       seeking_venue = False
+    else:
+      seeking_venue = True
     seeking_description = request.form['seeking_description']
 
     artist = Artist(
