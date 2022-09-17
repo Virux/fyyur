@@ -161,7 +161,7 @@ def create_venue_form():
 
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
-  error = False
+  error = False 
 
   try:
     name = request.form['name']
@@ -169,7 +169,7 @@ def create_venue_submission():
     state = request.form['state']
     address = request.form['address']
     phone = request.form['phone']
-    genres = request.form['genres']
+    genres = request.form.getlist('genres') #['genres']
     image_link = request.form['image_link']
     facebook_link = request.form['facebook_link']
     website_link = request.form['website_link']
