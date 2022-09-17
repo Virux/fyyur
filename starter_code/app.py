@@ -175,10 +175,11 @@ def create_venue_submission():
     website_link = request.form['website_link']
     seeking_talent = request.form['seeking_talent']
     seeking_description = request.form['seeking_description']
-    if seeking_talent == "y":
-      seeking_talent = True
-    else:
+    seeking_talent = request.form.get('seeking_talent', '')
+    if seeking_talent == '':
       seeking_talent = False
+    else:
+      seeking_talent = True
     seeking_description = request.form['seeking_description']
 
     venue = Venue(
@@ -328,10 +329,11 @@ def edit_venue_submission(venue_id):
     venue.image_link = request.form['image_link']
     venue.facebook_link = request.form['facebook_link']
     venue.website_link = request.form['website_link']
-    if venue.seeking_talent == "y":
-      venue.seeking_talent = True
-    else:
+    venue.seeking_talent = request.form.get('seeking_talent', '')
+    if venue.seeking_talent == '':
       venue.seeking_talent = False
+    else:
+      venue.seeking_talent = True
     venue.seeking_description = request.form['seeking_description']
     db.session.add(venue)
     db.session.commit()
