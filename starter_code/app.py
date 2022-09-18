@@ -201,7 +201,7 @@ def search_artists():
   # search for "band" should return "The Wild Sax Band".
   search_term = request.form.get('search_term', '')
   if search_term:
-    response = Artist.query.filter(Artist.name.contains(search_term.lower()))
+    response = Artist.query.filter(Artist.name.ilike('%'+search_term+'%'))
     count = response.count()
   else:
     count = ''
