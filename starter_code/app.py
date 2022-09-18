@@ -80,9 +80,8 @@ def search_venues():
   # seach for Hop should return "The Musical Hop".
   # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
   search_term = request.form.get('search_term', '')
-  #print(search_term, search_term.upper())
   if search_term:
-    response = Venue.query.filter(Venue.name.contains(search_term.lower()))
+    response = Venue.query.filter(Venue.name.ilike('%'+search_term+'%'))
     count = response.count()
   else:
     count = ''
