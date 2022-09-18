@@ -1,3 +1,6 @@
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 #----------------------------------------------------------------------------#
 # Models.
@@ -23,7 +26,7 @@ class Venue(db.Model):
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
     shows = db.relationship('Show', backref = 'venue', lazy = True)
-
+    #show = db.relationship('Artist', secondary=Show, backref=db.backref('Venue', lazy="dynamic"))
     def __repr__(self):
       return f'Venue name: {self.name}, City: {self.city}'
 
@@ -36,6 +39,7 @@ class Artist(db.Model):
     city = db.Column(db.String(120))
     state = db.Column(db.String(120))
     phone = db.Column(db.String(120))
+    #genres = db.Column(db.String(120))
     genres = db.Column(db.ARRAY(db.String), nullable=False)
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
@@ -45,7 +49,7 @@ class Artist(db.Model):
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
     shows = db.relationship('Show', backref='artist', lazy = True)
-
+    # show = db.relationship('Venue', secondary=Show, backref=db.backref('Artist', lazy="dynamic"))
     def __repr__(self):
       return f'Artist name: {self.name}, City: {self.city}'
 
