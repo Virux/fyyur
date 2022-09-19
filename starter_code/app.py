@@ -244,7 +244,29 @@ def search_artists():
 def show_artist(artist_id):
   # shows the artist page with the given artist_id
   # TODO: replace with real artist data from the artist table, using artist_id
-  artist = Artist.query.get(artist_id)
+  artist = Artist.query.get_or_404(artist_id)
+
+  upcoming_shows = []
+  past_shows = []
+
+  for show in artist.shows:
+    filtered_show = {
+      'venue_id': show.venue_id,
+      'venue_name': show.venue.name,
+      'venue_image_link': show.venue.image_link,
+      'start_time': show.start_time.strftime("%m/%d/%Y, %H:%M") 
+    }
+    if show.start_time <= datetime.now():
+      past_shows.append(filtered_show)
+    else:
+      upcoming_shows.append(filtered_show)
+
+  data = vars(artist)
+
+  data['past_shows'] = past_shows
+  data['upcoming_shows'] = upcoming_shows
+  data['past_shows_count'] = len(past_shows)
+  data['upcoming_shows_count'] = len(upcoming_shows)
   #data = list(filter(lambda d: d['id'] == artist_id, [data1, data2, data3]))[0]
   return render_template('pages/show_artist.html', artist=artist)
 
