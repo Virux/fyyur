@@ -25,7 +25,7 @@ class Venue(db.Model):
     seeking_description = db.Column(db.String(500))
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
-    shows = db.relationship('Show', backref = 'venue', lazy = True)
+    shows = db.relationship('Show', backref = 'venue', lazy = 'joined', cascade='all, delete')
     #show = db.relationship('Artist', secondary=Show, backref=db.backref('Venue', lazy="dynamic"))
     def __repr__(self):
       return f'Venue name: {self.name}, City: {self.city}'
@@ -48,7 +48,7 @@ class Artist(db.Model):
     seeking_description = db.Column(db.String(500))
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
-    shows = db.relationship('Show', backref='artist', lazy = True)
+    shows = db.relationship('Show', backref='artist', lazy = 'joined', cascade='all, delete')
     # show = db.relationship('Venue', secondary=Show, backref=db.backref('Artist', lazy="dynamic"))
     def __repr__(self):
       return f'Artist name: {self.name}, City: {self.city}'

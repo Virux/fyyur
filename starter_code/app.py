@@ -72,6 +72,8 @@ def venues():
   venues = Venue.query.all() 
   # TODO: replace with real venues data.
   #       num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
+
+
   return render_template('pages/venues.html', areas=venues);
 
 @app.route('/venues/search', methods=['POST'])
@@ -87,13 +89,42 @@ def search_venues():
     count = ''
     response = ''
     flash('Please insert a value to search for a venue')
-  return render_template('pages/search_venues.html', count=count, results=response, search_term=search_term)
+  return render_template(
+      'pages/search_venues.html', 
+      count=count, 
+      results=response, 
+      search_term=search_term
+    )
 
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
-  venue = Venue.query.get(venue_id)
+  venue = Venue.query.get_or_404(venue_id)
   # shows the venue page with the given venue_id
   # TODO: replace with real venue data from the venues table, using venue_id
+  """  num_upcoming_shows = Show.query.join(Artist).join(Venue)\
+  .filter((Show.artist_id == Artist.id) & (Show.venue_id == Venue.id)).all()"""
+
+  upcoming_shows = []
+  past_shows = []
+
+  for show in venue.shows:
+    filtered_show = {
+      'artist_id': show.artist_id,
+      'artist_name': show.artist.name,
+      'artist_image_link': show.artist.image_link,
+      'start_time': show.start_time.strftime("%m/%d/%Y, %H:%M") 
+    }
+    if show.start_time <= datetime.now():
+      past_shows.append(filtered_show)
+    else:
+      upcoming_shows.append(filtered_show)
+
+  data = vars(venue)
+
+  data['past_shows'] = past_shows
+  data['upcoming_shows'] = upcoming_shows
+  data['past_shows_count'] = len(past_shows)
+  data['upcoming_shows_count'] = len(upcoming_shows)
   #data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))[0]
   return render_template('pages/show_venue.html', venue=venue)
 
