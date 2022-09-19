@@ -112,7 +112,7 @@ def show_venue(venue_id):
       'artist_id': show.artist_id,
       'artist_name': show.artist.name,
       'artist_image_link': show.artist.image_link,
-      'start_time': show.start_time.strftime("%m/%d/%Y, %H:%M") 
+      'start_time': show.start_time.strftime("%m/%d/%Y at %H:%M") 
     }
     if show.start_time <= datetime.now():
       past_shows.append(filtered_show)
