@@ -138,7 +138,10 @@ def create_venue_form():
 
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
-
+  #this is not secure but since we haven't done how to propaly
+  #manage secret keys in this course, I guess we will leave it
+  #till then so we can write meta={'csrf': True} or just leave
+  #it as it is session secure.
   form = VenueForm(request.form, meta={'csrf': False})
 
   if form.validate():
